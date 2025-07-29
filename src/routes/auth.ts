@@ -8,19 +8,50 @@ const router = express.Router();
 // register interface
 router.post('/register', async (req, res) => {
   try {
-    const { email, password, name } = req.body;
+    const {
+      name,
+      email,
+      password,
+      phone,
+      gender,
+      height,
+      age,
+      address,
+      city,
+      state,
+      postalCode,
+      country,
+    } = req.body;
 
     // 1. check if user already exists
-    const existing = await User.findOne({ email });
-    if (existing) {
+    const existingEmail = await User.findOne({ email });
+    const existingPhone = await User.findOne({ phone });
+
+    if (existingEmail) {
       return res.status(400).json({ message: '邮箱已注册' });
+    }
+    if (existingPhone) {
+      return res.status(400).json({ message: '手机号已注册' });
     }
 
     // 2. encrypt password
     const passwordHash = await bcrypt.hash(password, 10);
 
     // 3. create new user
-    const user = await User.create({ email, passwordHash, name });
+    const user = await User.create({
+      name,
+      email,
+      passwordHash,
+      phone,
+      gender,
+      height,
+      age,
+      address,
+      city,
+      state,
+      postalCode,
+      country,
+    });
 
     res.status(201).json({ message: '注册成功', userId: user._id });
   } catch (err) {
