@@ -81,7 +81,12 @@ router.post('/login', async (req, res) => {
       expiresIn: '7d',
     });
 
-    res.json({ message: '登录成功', token });
+    res.json({
+      message: '登录成功',
+      token,
+      name: user.name,
+      email: user.email,
+    });
   } catch (err) {
     res.status(500).json({ message: '登录失败', error: err });
   }
